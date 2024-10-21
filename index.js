@@ -1,15 +1,14 @@
+let todo = JSON.parse(localStorage.getItem("todo") || "[]");
+
 const todoInput = document.getElementById("todoInput");
 const todoList = document.getElementById("todoList");
 const todoCount = document.getElementById("todoCount");
 const addButton = document.querySelector(".btn");
 const deleteButton = document.getElementById("deletebutton");
 
-
 document.addEventListener("DOMContentLoaded", function () {
-    
     addButton.addEventListener("click", addTask);
 
-    
     todoInput.addEventListener("keydown", function (event) {
         if (event.key === "Enter") {
             event.preventDefault();
@@ -17,26 +16,23 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    
     deleteButton.addEventListener("click", deleteAllTasks);
 
-    
     displayTasks();
 });
 
-
 function addTask() {
-    const newTask = todoInput.value.trim(); 
+    const newTask = todoInput.value.trim();
     if (newTask !== "") {
         todo.push({ text: newTask, disabled: false });
         saveToLocalStorage();
-        todoInput.value = ""; 
+        todoInput.value = "";
         displayTasks();
     }
 }
 
 function displayTasks() {
-    todoList.innerHTML = ""; 
+    todoList.innerHTML = "";
 
     todo.forEach((item, index) => {
         const p = document.createElement("div");
@@ -47,29 +43,25 @@ function displayTasks() {
             </div>
         `;
 
-        
         p.querySelector(".todo-checkbox").addEventListener("change", () => {
             toggleTask(index);
         });
 
-        todoList.appendChild(p); 
+        todoList.appendChild(p);
     });
 
-    todoCount.textContent = todo.length; 
+    todoCount.textContent = todo.length;
 }
-
 
 function editTask(index) {
     const todoItem = document.getElementById(`todo-${index}`);
     const existingText = todo[index].text;
 
-    
     const input = document.createElement("input");
     input.value = existingText;
     todoItem.innerHTML = "";
     todoItem.appendChild(input);
 
-    
     input.addEventListener("blur", function () {
         const updatedText = input.value.trim();
         if (updatedText !== "") {
@@ -79,25 +71,21 @@ function editTask(index) {
         displayTasks();
     });
 
-    
     input.focus();
 }
 
-
 function toggleTask(index) {
-    todo[index].disabled = !todo[index].disabled; 
+    todo[index].disabled = !todo[index].disabled;
     saveToLocalStorage();
     displayTasks();
 }
-
 
 function saveToLocalStorage() {
     localStorage.setItem("todo", JSON.stringify(todo));
 }
 
-
 function deleteAllTasks() {
-    todo = []; 
+    todo = [];
     saveToLocalStorage();
     displayTasks();
 }
